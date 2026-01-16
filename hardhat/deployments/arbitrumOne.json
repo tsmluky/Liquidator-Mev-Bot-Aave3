@@ -1,0 +1,20 @@
+{
+  "project": "morpho-liquidator-v0",
+  "network": "arbitrumOne",
+  "chainId": 42161,
+  "contract": "LiquidationExecutor",
+  "address": "0xE6B9A03501b4A826874CDDeBb9316d7eE0590a8E",
+  "deployedAt": "2026-01-11T23:07:20.306Z",
+  "creation": {
+    "txHash": "0x2844020dae0a06bd5548c50bed091292205030cfc5fa9acdf283d1f09fcdd5a2",
+    "contractCreator": "0xf603fe14839f7c893b468e37499f01d594a1d3b6",
+    "blockNumber": 420377922,
+    "timestamp": "2026-01-11T22:39:10.000Z"
+  },
+  "args": {
+    "AAVE_POOL": "0x794a61358d6845594f94dc1db02a252b5b4814ad",
+    "MORPHO": "0x6c247b1f6182318877311737bac0844baa518f5e",
+    "SWAP_ROUTER": "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
+    "TREASURY": "0xf603fe14839f7c893b468e37499f01d594a1d3b6"
+  }
+}

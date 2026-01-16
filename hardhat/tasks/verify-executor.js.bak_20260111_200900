@@ -1,0 +1,176 @@
+import { keccak256, isAddress, getAddress, zeroAddress, hexToBytes } from "viem";
+
+/**
+ * Strip Solidity CBOR metadata from the end of deployed bytecode.
+ * Solidity appends: <runtime><cbor_metadata><2 bytes: metadata_length>
+ * last 2 bytes = metadata length (bytes), trailer = metaLen + 2 bytes.
+ */
+function stripSolcMetadata(hex) {
+  if (!hex || hex === "0x") return hex;
+  const h = hex.startsWith("0x") ? hex.slice(2) : hex;
+  if (h.length < 4) return hex;
+
+  const lenHex = h.slice(-4);
+  const metaLen = parseInt(lenHex, 16);
+  if (!Number.isFinite(metaLen) || metaLen <= 0) return hex;
+
+  const trailerBytes = metaLen + 2;
+  const trailerHexChars = trailerBytes * 2;
+  if (trailerHexChars >= h.length) return hex;
+
+  const stripped = h.slice(0, h.length - trailerHexChars);
+  return "0x" + stripped;
+}
+
+/**
+ * Mask byte ranges (byte offsets) to zeros in a hex string.
+ * ranges: [{ start: <bytes>, length: <bytes> }, ...]
+ */
+function maskRanges(hex, ranges) {
+  if (!hex || hex === "0x") return hex;
+  const has0x = hex.startsWith("0x");
+  let h = has0x ? hex.slice(2) : hex;
+
+  // turn into array of chars for easy replacement
+  const arr = h.split("");
+
+  for (const r of ranges) {
+    const startHex = r.start * 2;
+    const lenHex = r.length * 2;
+    const endHex = startHex + lenHex;
+    if (startHex < 0 || endHex > arr.length) continue;
+
+    for (let i = startHex; i < endHex; i++) arr[i] = "0";
+  }
+
+  h = arr.join("");
+  return (has0x ? "0x" : "") + h;
+}
+
+/**
+ * Flatten immutableReferences into ranges array.
+ * Shape (solc): { <id>: [ { start, length }, ... ], ... }
+ */
+function flattenImmutableRefs(immutableReferences) {
+  const ranges = [];
+  if (!immutableReferences || typeof immutableReferences !== "object") return ranges;
+
+  for (const k of Object.keys(immutableReferences)) {
+    const arr = immutableReferences[k];
+    if (!Array.isArray(arr)) continue;
+    for (const item of arr) {
+      const start = Number(item?.start);
+      const length = Number(item?.length);
+      if (Number.isFinite(start) && Number.isFinite(length) && start >= 0 && length > 0) {
+        ranges.push({ start, length });
+      }
+    }
+  }
+  // sort for stable debug
+  ranges.sort((a, b) => a.start - b.start);
+  return ranges;
+}
+
+export default async function (taskArgs, hre) {
+  const expectedChainId = 42161;
+
+  const addrRaw = (taskArgs.address ?? process.env.EXECUTOR_ADDRESS ?? "").trim();
+  if (!addrRaw) throw new Error("Missing --address or EXECUTOR_ADDRESS");
+  if (!isAddress(addrRaw)) throw new Error(`Invalid address: ${addrRaw}`);
+
+  const address = getAddress(addrRaw);
+
+  const { viem } = await hre.network.connect();
+  const publicClient = await viem.getPublicClient();
+
+  const chainId = await publicClient.getChainId();
+  if (chainId !== expectedChainId) {
+    throw new Error(`Wrong chainId. Expected ${expectedChainId} (Arbitrum One), got ${chainId}`);
+  }
+
+  const onchainCode = await publicClient.getBytecode({ address });
+  if (!onchainCode || onchainCode === "0x") {
+    throw new Error(`No bytecode at ${address}. Not a contract or wrong address/network.`);
+  }
+
+  const artifact = await hre.artifacts.readArtifact("LiquidationExecutor");
+  const abi = artifact.abi ?? [];
+
+  // best-effort get deployed bytecode from artifact (handles both HH and solc shapes)
+  const localDeployedBytecode =
+    (typeof artifact.deployedBytecode === "string" ? artifact.deployedBytecode : "") ||
+    artifact.deployedBytecode?.object ||
+    artifact.evm?.deployedBytecode?.object ||
+    "";
+
+  if (!localDeployedBytecode || localDeployedBytecode === "0x") {
+    throw new Error("Could not find deployed bytecode in artifact (LiquidationExecutor).");
+  }
+
+  // immutable refs (solc artifact shape)
+  const immutableReferences =
+    artifact.evm?.deployedBytecode?.immutableReferences ||
+    artifact.deployedBytecode?.immutableReferences ||
+    artifact.evm?.deployedBytecode?.immutableReferences ||
+    null;
+
+  const ranges = flattenImmutableRefs(immutableReferences);
+
+  const onchainStripped = stripSolcMetadata(onchainCode);
+  const localStripped = stripSolcMetadata(localDeployedBytecode);
+
+  const onchainMasked = maskRanges(onchainStripped, ranges);
+  const localMasked = maskRanges(localStripped, ranges);
+
+  const onchainMaskedHash = keccak256(hexToBytes(onchainMasked));
+  const localMaskedHash = keccak256(hexToBytes(localMasked));
+
+  console.log("== On-chain verification ==");
+  console.log(`network.chainId: ${chainId}`);
+  console.log(`contract: ${address}`);
+
+  console.log("== Bytecode lengths (stripped) ==");
+  console.log(`len.onchain.stripped: ${onchainStripped.length} hex chars`);
+  console.log(`len.local.stripped:   ${localStripped.length} hex chars`);
+
+  console.log("== Immutable masking ==");
+  console.log(`immutableRanges: ${ranges.length}`);
+  if (ranges.length > 0) {
+    console.log("firstRanges:", ranges.slice(0, 6));
+  } else {
+    console.log("NOTE: No immutableReferences found in artifact. If contract uses immutables, artifact shape may differ.");
+  }
+
+  console.log("== Hashes (stripped + immu-masked) ==");
+  console.log(`onchain.masked.keccak256: ${onchainMaskedHash}`);
+  console.log(`local.masked.keccak256:   ${localMaskedHash}`);
+
+  if (onchainMaskedHash !== localMaskedHash) {
+    throw new Error("Bytecode mismatch after stripping metadata AND masking immutables.");
+  }
+
+  console.log("OK: runtime matches after stripping metadata and masking immutables.");
+
+  // Getter probe (same as before)
+  const hasFn = (name) =>
+    abi.some((x) => x?.type === "function" && x?.name === name && (x?.inputs?.length ?? 0) === 0);
+
+  const read0 = async (fnName) => {
+    try {
+      return await publicClient.readContract({ address, abi, functionName: fnName, args: [] });
+    } catch {
+      return undefined;
+    }
+  };
+
+  const candidates = ["owner", "treasury", "AAVE_POOL", "MORPHO", "SWAP_ROUTER"];
+  console.log("== Getter probe ==");
+  for (const fn of candidates) {
+    if (!hasFn(fn)) continue;
+    const v = await read0(fn);
+    if (typeof v === "string" && v === zeroAddress) throw new Error(`Guardrail failed: ${fn}() returned zero address`);
+    console.log(`${fn}():`, v);
+  }
+
+  console.log("Done.");
+}

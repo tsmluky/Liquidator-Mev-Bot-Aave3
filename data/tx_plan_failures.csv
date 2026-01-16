@@ -1,0 +1,113 @@
+"ts","candidateId","marketId","borrower","action","pass","note"
+"12/01/2026 18:30:54","42161|0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff|0x3d7f861e7fabe268c074de3ff1dd0b3a2eb3d70e|0xfdd22ce6d1f66bc0ec89b20bf16ccb6670f55a5a|0xaf88d065e77c8cc2239327c5edb3a432268e5831","0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff","0x3d7f861e7faBe268C074DE3Ff1dd0b3A2EB3D70e","WATCH","False","ORDER_BUILD_FAILED: The contract function ""market"" returned no data (""0x"").
+
+This could be due to any of the following:
+  - The contract does not have the function ""market"",
+  - The parameters passed to the contract function may be invalid, or
+  - The address is not a contract.
+ 
+Contract Call:
+  address:   0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb
+  function:  market(bytes32 id)
+  args:            (0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff)
+
+Docs: https://viem.sh/docs/contract/readContract
+Version: viem@2.43.5"
+"12/01/2026 18:30:54","42161|0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff|0xf4766c366f15ab0f338ecc9bef49bbaac13649a6|0xfdd22ce6d1f66bc0ec89b20bf16ccb6670f55a5a|0xaf88d065e77c8cc2239327c5edb3a432268e5831","0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff","0xf4766c366f15AB0F338ecC9bEF49BBaAc13649a6","WATCH","False","ORDER_BUILD_FAILED: The contract function ""market"" returned no data (""0x"").
+
+This could be due to any of the following:
+  - The contract does not have the function ""market"",
+  - The parameters passed to the contract function may be invalid, or
+  - The address is not a contract.
+ 
+Contract Call:
+  address:   0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb
+  function:  market(bytes32 id)
+  args:            (0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff)
+
+Docs: https://viem.sh/docs/contract/readContract
+Version: viem@2.43.5"
+"12/01/2026 18:30:55","42161|0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff|0x5a98dbceeca053b7845fc4dd79124f66908ade50|0xfdd22ce6d1f66bc0ec89b20bf16ccb6670f55a5a|0xaf88d065e77c8cc2239327c5edb3a432268e5831","0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff","0x5A98dBcEeCa053b7845Fc4dD79124F66908AdE50","WATCH","False","ORDER_BUILD_FAILED: The contract function ""market"" returned no data (""0x"").
+
+This could be due to any of the following:
+  - The contract does not have the function ""market"",
+  - The parameters passed to the contract function may be invalid, or
+  - The address is not a contract.
+ 
+Contract Call:
+  address:   0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb
+  function:  market(bytes32 id)
+  args:            (0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff)
+
+Docs: https://viem.sh/docs/contract/readContract
+Version: viem@2.43.5"
+"12/01/2026 18:30:55","42161|0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff|0x8250a7f9fca9c33e68eead8c05c1d58c8fd70d13|0xfdd22ce6d1f66bc0ec89b20bf16ccb6670f55a5a|0xaf88d065e77c8cc2239327c5edb3a432268e5831","0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff","0x8250A7F9fCA9C33E68Eead8c05c1D58c8Fd70d13","WATCH","False","ORDER_BUILD_FAILED: The contract function ""market"" returned no data (""0x"").
+
+This could be due to any of the following:
+  - The contract does not have the function ""market"",
+  - The parameters passed to the contract function may be invalid, or
+  - The address is not a contract.
+ 
+Contract Call:
+  address:   0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb
+  function:  market(bytes32 id)
+  args:            (0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff)
+
+Docs: https://viem.sh/docs/contract/readContract
+Version: viem@2.43.5"
+"12/01/2026 18:30:55","42161|0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff|0x76830fe613b1daf483fb05f306b78674e1843a69|0xfdd22ce6d1f66bc0ec89b20bf16ccb6670f55a5a|0xaf88d065e77c8cc2239327c5edb3a432268e5831","0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff","0x76830fe613B1DAf483FB05f306B78674E1843A69","WATCH","False","ORDER_BUILD_FAILED: The contract function ""market"" returned no data (""0x"").
+
+This could be due to any of the following:
+  - The contract does not have the function ""market"",
+  - The parameters passed to the contract function may be invalid, or
+  - The address is not a contract.
+ 
+Contract Call:
+  address:   0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb
+  function:  market(bytes32 id)
+  args:            (0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff)
+
+Docs: https://viem.sh/docs/contract/readContract
+Version: viem@2.43.5"
+"12/01/2026 18:30:55","42161|0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff|0x4a4037e53306f284cf214b733e9a54d6a5939818|0xfdd22ce6d1f66bc0ec89b20bf16ccb6670f55a5a|0xaf88d065e77c8cc2239327c5edb3a432268e5831","0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff","0x4a4037E53306f284cf214B733E9A54D6a5939818","WATCH","False","ORDER_BUILD_FAILED: The contract function ""market"" returned no data (""0x"").
+
+This could be due to any of the following:
+  - The contract does not have the function ""market"",
+  - The parameters passed to the contract function may be invalid, or
+  - The address is not a contract.
+ 
+Contract Call:
+  address:   0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb
+  function:  market(bytes32 id)
+  args:            (0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff)
+
+Docs: https://viem.sh/docs/contract/readContract
+Version: viem@2.43.5"
+"12/01/2026 18:30:55","42161|0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff|0x99be3f364af70cc34525936c0b1750dbe955ed57|0xfdd22ce6d1f66bc0ec89b20bf16ccb6670f55a5a|0xaf88d065e77c8cc2239327c5edb3a432268e5831","0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff","0x99bE3f364AF70cc34525936c0b1750DBE955Ed57","WATCH","False","ORDER_BUILD_FAILED: The contract function ""market"" returned no data (""0x"").
+
+This could be due to any of the following:
+  - The contract does not have the function ""market"",
+  - The parameters passed to the contract function may be invalid, or
+  - The address is not a contract.
+ 
+Contract Call:
+  address:   0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb
+  function:  market(bytes32 id)
+  args:            (0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff)
+
+Docs: https://viem.sh/docs/contract/readContract
+Version: viem@2.43.5"
+"12/01/2026 18:30:56","42161|0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff|0xf8992a1f4e302460bd49a1646ee315d810235212|0xfdd22ce6d1f66bc0ec89b20bf16ccb6670f55a5a|0xaf88d065e77c8cc2239327c5edb3a432268e5831","0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff","0xf8992A1f4e302460Bd49a1646Ee315D810235212","WATCH","False","ORDER_BUILD_FAILED: The contract function ""market"" returned no data (""0x"").
+
+This could be due to any of the following:
+  - The contract does not have the function ""market"",
+  - The parameters passed to the contract function may be invalid, or
+  - The address is not a contract.
+ 
+Contract Call:
+  address:   0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb
+  function:  market(bytes32 id)
+  args:            (0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff)
+
+Docs: https://viem.sh/docs/contract/readContract
+Version: viem@2.43.5"

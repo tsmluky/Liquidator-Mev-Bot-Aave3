@@ -1,0 +1,57 @@
+{
+  "generatedAt": "2026-01-11T18:32:04.007Z",
+  "markets": 25,
+  "positions": 1000,
+  "candidates": 1000,
+  "hotQueue": 32,
+  "countsByReason": {
+    "ok": 961,
+    "missing_fields": 38,
+    "ltv_out_of_range": 1
+  },
+  "countsByStatus": {
+    "below_watch": 968,
+    "watch": 30,
+    "exec_ready": 2
+  },
+  "top3": [
+    {
+      "rank": 1,
+      "status": "exec_ready",
+      "proximity": 0.9997562523701659,
+      "borrowUsd": 2435818.4586214717,
+      "collateralUsdEst": 2578214.1040759855,
+      "collateral": "thBILL",
+      "loan": "USDC",
+      "marketId": "0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff",
+      "borrower": "0xf4766c366f15AB0F338ecC9bEF49BBaAc13649a6",
+      "candidateId": "42161|0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff|0xf4766c366f15ab0f338ecc9bef49bbaac13649a6|0xfdd22ce6d1f66bc0ec89b20bf16ccb6670f55a5a|0xaf88d065e77c8cc2239327c5edb3a432268e5831"
+    },
+    {
+      "rank": 2,
+      "status": "exec_ready",
+      "proximity": 0.9996907868027174,
+      "borrowUsd": 1491803.8797718647,
+      "collateralUsdEst": 1579116.7279353589,
+      "collateral": "thBILL",
+      "loan": "USDC",
+      "marketId": "0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff",
+      "borrower": "0x5A98dBcEeCa053b7845Fc4dD79124F66908AdE50",
+      "candidateId": "42161|0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff|0x5a98dbceeca053b7845fc4dd79124f66908ade50|0xfdd22ce6d1f66bc0ec89b20bf16ccb6670f55a5a|0xaf88d065e77c8cc2239327c5edb3a432268e5831"
+    },
+    {
+      "rank": 3,
+      "status": "watch",
+      "proximity": 0.9975169319459298,
+      "borrowUsd": 1434858.3558139682,
+      "collateralUsdEst": 1522148.2281298004,
+      "collateral": "sUSDS",
+      "loan": "USDC",
+      "marketId": "0x77fe2f7c2dd6f4da6bc5f445b06052ff8df55cb70cfce9afc16ec3c69a5fd3a3",
+      "borrower": "0xe3278dd9CDc262c60FbFba91D496dbAc90A929bf",
+      "candidateId": "42161|0x77fe2f7c2dd6f4da6bc5f445b06052ff8df55cb70cfce9afc16ec3c69a5fd3a3|0xe3278dd9cdc262c60fbfba91d496dbac90a929bf|0xddb46999f8891663a8f2828d25298f70416d7610|0xaf88d065e77c8cc2239327c5edb3a432268e5831"
+    }
+  ],
+  "watchTh": 0.98,
+  "execTh": 0.9996
+}

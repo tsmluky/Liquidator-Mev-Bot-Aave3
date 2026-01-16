@@ -1,0 +1,187 @@
+import { quoteExactInputSingle } from "./uniswapQuoterV2.js";
+
+export type QuoteFail = {
+  fee: number;
+  leg: "single" | "hop1" | "hop2";
+  tokenIn: `0x${string}`;
+  tokenOut: `0x${string}`;
+  amountIn: string;
+  msg: string;
+};
+
+export type QuoteBestResult = {
+  amountOut: bigint;
+  mode: string;   // e.g. "quoterV2_fee_500" | "quoterV2_2hop_weth_500_3000"
+  route: string;  // e.g. "single" | "tokenIn->WETH->tokenOut"
+  attempts: number;
+  fails: number;
+  firstFail: QuoteFail | null;
+};
+
+type Args = {
+  rpcUrl: string;
+  quoter: `0x${string}`;
+  tokenIn: `0x${string}`;
+  tokenOut: `0x${string}`;
+  amountIn: bigint;
+
+  // fee tiers to try (e.g. [100,500,3000,10000])
+  fees: number[];
+
+  // intermediates for 2-hop routing
+  intermediates: `0x${string}`[];
+
+  // cap to avoid explosion
+  maxFeesPerLeg?: number; // default 3
+};
+
+function takeFirstN<T>(arr: T[], n: number): T[] {
+  if (!Array.isArray(arr)) return [];
+  return arr.slice(0, Math.max(0, n));
+}
+
+export async function quoteBestExactInput(args: Args): Promise<QuoteBestResult | null> {
+  const maxFeesPerLeg = Number.isFinite(args.maxFeesPerLeg) ? Number(args.maxFeesPerLeg) : 3;
+  const feesLeg = takeFirstN(args.fees, Math.max(1, Math.trunc(maxFeesPerLeg)));
+
+  let attempts = 0;
+  let fails = 0;
+  let firstFail: QuoteFail | null = null;
+
+  // --- 1) Single hop ---
+  let bestOut: bigint | null = null;
+  let bestFee: number | null = null;
+
+  for (const fee of args.fees) {
+    try {
+      attempts++;
+      const q = await quoteExactInputSingle({
+        rpcUrl: args.rpcUrl,
+        quoter: args.quoter,
+        tokenIn: args.tokenIn,
+        tokenOut: args.tokenOut,
+        fee,
+        amountIn: args.amountIn,
+      });
+
+      if (bestOut === null || q.amountOut > bestOut) {
+        bestOut = q.amountOut;
+        bestFee = fee;
+      }
+    } catch (e: any) {
+      fails++;
+      if (!firstFail) {
+        firstFail = {
+          fee,
+          leg: "single",
+          tokenIn: args.tokenIn,
+          tokenOut: args.tokenOut,
+          amountIn: args.amountIn.toString(),
+          msg: e?.shortMessage ?? e?.message ?? String(e),
+        };
+      }
+    }
+  }
+
+  if (bestOut !== null && bestFee !== null) {
+    return {
+      amountOut: bestOut,
+      mode: `quoterV2_fee_${bestFee}`,
+      route: "single",
+      attempts,
+      fails,
+      firstFail,
+    };
+  }
+
+  // --- 2) Two hop (tokenIn -> mid -> tokenOut) ---
+  let best2: bigint | null = null;
+  let bestF1: number | null = null;
+  let bestF2: number | null = null;
+  let bestMid: `0x${string}` | null = null;
+
+  for (const mid of args.intermediates) {
+    if (mid.toLowerCase() === args.tokenIn.toLowerCase()) continue;
+    if (mid.toLowerCase() === args.tokenOut.toLowerCase()) continue;
+
+    for (const fee1 of feesLeg) {
+      let out1: bigint | null = null;
+      try {
+        attempts++;
+        const q1 = await quoteExactInputSingle({
+          rpcUrl: args.rpcUrl,
+          quoter: args.quoter,
+          tokenIn: args.tokenIn,
+          tokenOut: mid,
+          fee: fee1,
+          amountIn: args.amountIn,
+        });
+        out1 = q1.amountOut;
+      } catch (e: any) {
+        fails++;
+        if (!firstFail) {
+          firstFail = {
+            fee: fee1,
+            leg: "hop1",
+            tokenIn: args.tokenIn,
+            tokenOut: mid,
+            amountIn: args.amountIn.toString(),
+            msg: e?.shortMessage ?? e?.message ?? String(e),
+          };
+        }
+        continue;
+      }
+
+      for (const fee2 of feesLeg) {
+        try {
+          attempts++;
+          const q2 = await quoteExactInputSingle({
+            rpcUrl: args.rpcUrl,
+            quoter: args.quoter,
+            tokenIn: mid,
+            tokenOut: args.tokenOut,
+            fee: fee2,
+            amountIn: out1!,
+          });
+
+          if (best2 === null || q2.amountOut > best2) {
+            best2 = q2.amountOut;
+            bestF1 = fee1;
+            bestF2 = fee2;
+            bestMid = mid;
+          }
+        } catch (e: any) {
+          fails++;
+          if (!firstFail) {
+            firstFail = {
+              fee: fee2,
+              leg: "hop2",
+              tokenIn: mid,
+              tokenOut: args.tokenOut,
+              amountIn: out1!.toString(),
+              msg: e?.shortMessage ?? e?.message ?? String(e),
+            };
+          }
+        }
+      }
+    }
+  }
+
+  if (best2 !== null && bestF1 !== null && bestF2 !== null && bestMid !== null) {
+    const midName =
+      bestMid.toLowerCase() === "0x82af49447d8a07e3bd95bd0d56f35241523fbab1" ? "weth" :
+      bestMid.toLowerCase() === "0xaf88d065e77c8cc2239327c5edb3a432268e5831" ? "usdc" :
+      "mid";
+
+    return {
+      amountOut: best2,
+      mode: `quoterV2_2hop_${midName}_${bestF1}_${bestF2}`,
+      route: `${args.tokenIn}->${bestMid}->${args.tokenOut}`,
+      attempts,
+      fails,
+      firstFail,
+    };
+  }
+
+  return null;
+}

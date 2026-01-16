@@ -1,0 +1,600 @@
+{
+  "generatedAt": "2026-01-11T18:32:04.007Z",
+  "markets": [
+    {
+      "uniqueKey": "0xfdb8221edcae73f73485d55c30e706906114bc2ff4634870c5c57e8fb83eae6a",
+      "lltv": "625000000000000000",
+      "loanAsset": {
+        "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "symbol": "USDC",
+        "decimals": 6,
+        "priceUsd": 1.00019863013612
+      },
+      "collateralAsset": {
+        "address": "0x010700AB046Dd8e92b0e3587842080Df36364ed3",
+        "symbol": "K",
+        "decimals": 18,
+        "priceUsd": null
+      },
+      "state": {
+        "supplyAssetsUsd": 58471909.778713994,
+        "borrowAssetsUsd": 58471909.66984738,
+        "collateralAssetsUsd": null,
+        "liquidityAssetsUsd": 0.10886661989716599,
+        "fee": 0,
+        "utilization": 0.9999999981381381
+      }
+    },
+    {
+      "uniqueKey": "0xf86f3edd6f16cd8211f4d206866dc4ecd41be6211063ac11f8508e1b7112ef40",
+      "lltv": "915000000000000000",
+      "loanAsset": {
+        "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "symbol": "USDC",
+        "decimals": 6,
+        "priceUsd": 1.00019863013612
+      },
+      "collateralAsset": {
+        "address": "0x41CA7586cC1311807B4605fBB748a3B8862b42b5",
+        "symbol": "syrupUSDC",
+        "decimals": 6,
+        "priceUsd": 1.1456521949318608
+      },
+      "state": {
+        "supplyAssetsUsd": 58069692.385063246,
+        "borrowAssetsUsd": 50358558.36060746,
+        "collateralAssetsUsd": 57370020.21414012,
+        "liquidityAssetsUsd": 7711134.024455786,
+        "fee": 0,
+        "utilization": 0.8672089741181537
+      }
+    },
+    {
+      "uniqueKey": "0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff",
+      "lltv": "945000000000000000",
+      "loanAsset": {
+        "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "symbol": "USDC",
+        "decimals": 6,
+        "priceUsd": 1.00019863013612
+      },
+      "collateralAsset": {
+        "address": "0xfDD22Ce6D1F66bc0Ec89b20BF16CcB6670F55A5a",
+        "symbol": "thBILL",
+        "decimals": 6,
+        "priceUsd": 1.0119707037604775
+      },
+      "state": {
+        "supplyAssetsUsd": 38367451.1749183,
+        "borrowAssetsUsd": 33680426.46216343,
+        "collateralAssetsUsd": 38067612.92437519,
+        "liquidityAssetsUsd": 4687024.712754867,
+        "fee": 0,
+        "utilization": 0.8778385175656681
+      }
+    },
+    {
+      "uniqueKey": "0x090ff0cd57a258b342c870691a180bb79691e97b31ddda2b7cdd4b5a362c3cca",
+      "lltv": "915000000000000000",
+      "loanAsset": {
+        "address": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+        "symbol": "USDT0",
+        "decimals": 6,
+        "priceUsd": 0.9985388956560267
+      },
+      "collateralAsset": {
+        "address": "0x5B2C615E22272234AACF187632a0531cA1243279",
+        "symbol": "PT-USDai-19FEB2026",
+        "decimals": 18,
+        "priceUsd": 0.9935192327479553
+      },
+      "state": {
+        "supplyAssetsUsd": 32072900.288486037,
+        "borrowAssetsUsd": 26428497.969838027,
+        "collateralAssetsUsd": 30464412.841576077,
+        "liquidityAssetsUsd": 5644402.318648008,
+        "fee": 0,
+        "utilization": 0.8240133487187528
+      }
+    },
+    {
+      "uniqueKey": "0x571cb3ac535d61d92026c071ef1df4794d0bbbe1755f916ff640746f81b52af4",
+      "lltv": "915000000000000000",
+      "loanAsset": {
+        "address": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+        "symbol": "USDT0",
+        "decimals": 6,
+        "priceUsd": 0.9985388956560267
+      },
+      "collateralAsset": {
+        "address": "0x41CA7586cC1311807B4605fBB748a3B8862b42b5",
+        "symbol": "syrupUSDC",
+        "decimals": 6,
+        "priceUsd": 1.1456521949318608
+      },
+      "state": {
+        "supplyAssetsUsd": 19971330.53127428,
+        "borrowAssetsUsd": 18334348.62849136,
+        "collateralAssetsUsd": 21799114.26430498,
+        "liquidityAssetsUsd": 1636981.9027829168,
+        "fee": 0,
+        "utilization": 0.9180334079284567
+      }
+    },
+    {
+      "uniqueKey": "0x33e0c8ab132390822b07e5dc95033cf250c963153320b7ffca73220664da2ea0",
+      "lltv": "860000000000000000",
+      "loanAsset": {
+        "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "symbol": "USDC",
+        "decimals": 6,
+        "priceUsd": 1.00019863013612
+      },
+      "collateralAsset": {
+        "address": "0x5979D7b546E38E414F7E9822514be443A4800529",
+        "symbol": "wstETH",
+        "decimals": 18,
+        "priceUsd": 3825.9260170357747
+      },
+      "state": {
+        "supplyAssetsUsd": 17822340.899051994,
+        "borrowAssetsUsd": 16074118.39457551,
+        "collateralAssetsUsd": 24940207.938267786,
+        "liquidityAssetsUsd": 1748222.5044764802,
+        "fee": 0,
+        "utilization": 0.9019083680208658
+      }
+    },
+    {
+      "uniqueKey": "0x7717f1e04510390518811b3133ea47c298094ddd1d806ed8f8867d88c727bad7",
+      "lltv": "860000000000000000",
+      "loanAsset": {
+        "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "symbol": "USDC",
+        "decimals": 6,
+        "priceUsd": 1.00019863013612
+      },
+      "collateralAsset": {
+        "address": "0x1BF1311FCF914A69Dd5805C9B06b72F80539cB3f",
+        "symbol": "PT-sUSDai-19FEB2026",
+        "decimals": 18,
+        "priceUsd": 1.0004399688013466
+      },
+      "state": {
+        "supplyAssetsUsd": 13339888.12801319,
+        "borrowAssetsUsd": 11228398.78796517,
+        "collateralAssetsUsd": 16367637.132566689,
+        "liquidityAssetsUsd": 2111489.340048019,
+        "fee": 0,
+        "utilization": 0.8417161133747454
+      }
+    },
+    {
+      "uniqueKey": "0x6c831dcc45a7c0af00b751da651bd874b96653c587615d11aafade7b357c4b43",
+      "lltv": "915000000000000000",
+      "loanAsset": {
+        "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "symbol": "USDC",
+        "decimals": 6,
+        "priceUsd": 1.00019863013612
+      },
+      "collateralAsset": {
+        "address": "0x9b3924f9652cabf3Db48B7B4C92E474c571B3Ab4",
+        "symbol": "PT-thBILL-19FEB2026",
+        "decimals": 6,
+        "priceUsd": 0.9881232687883594
+      },
+      "state": {
+        "supplyAssetsUsd": 7584835.247311484,
+        "borrowAssetsUsd": 6894698.199573962,
+        "collateralAssetsUsd": 8254606.755092562,
+        "liquidityAssetsUsd": 690137.0477375215,
+        "fee": 0,
+        "utilization": 0.9090109375833645
+      }
+    },
+    {
+      "uniqueKey": "0x77fe2f7c2dd6f4da6bc5f445b06052ff8df55cb70cfce9afc16ec3c69a5fd3a3",
+      "lltv": "945000000000000000",
+      "loanAsset": {
+        "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "symbol": "USDC",
+        "decimals": 6,
+        "priceUsd": 1.00019863013612
+      },
+      "collateralAsset": {
+        "address": "0xdDb46999F8891663a8F2828d25298f70416d7610",
+        "symbol": "sUSDS",
+        "decimals": 18,
+        "priceUsd": 1.0834533587112691
+      },
+      "state": {
+        "supplyAssetsUsd": 6140741.736238661,
+        "borrowAssetsUsd": 5535413.344996752,
+        "collateralAssetsUsd": 5959850.184190091,
+        "liquidityAssetsUsd": 605328.391241908,
+        "fee": 0,
+        "utilization": 0.9014242224730518
+      }
+    },
+    {
+      "uniqueKey": "0x8147c63f3f6f5a0825c84bf2cb11443c72b609fa39cf9a362e3d4dc2c5ca76c4",
+      "lltv": "915000000000000000",
+      "loanAsset": {
+        "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "symbol": "USDC",
+        "decimals": 6,
+        "priceUsd": 1.00019863013612
+      },
+      "collateralAsset": {
+        "address": "0x5B2C615E22272234AACF187632a0531cA1243279",
+        "symbol": "PT-USDai-19FEB2026",
+        "decimals": 18,
+        "priceUsd": 0.9935192327479553
+      },
+      "state": {
+        "supplyAssetsUsd": 5092927.125308059,
+        "borrowAssetsUsd": 4586018.033967829,
+        "collateralAssetsUsd": 5317475.942306561,
+        "liquidityAssetsUsd": 506909.09134022886,
+        "fee": 0,
+        "utilization": 0.9004680257800534
+      }
+    },
+    {
+      "uniqueKey": "0xed06d9e82d7c35ca80d3983194e15462a96202bd875800af18183321f4611868",
+      "lltv": "860000000000000000",
+      "loanAsset": {
+        "address": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+        "symbol": "USDT0",
+        "decimals": 6,
+        "priceUsd": 0.9985388956560267
+      },
+      "collateralAsset": {
+        "address": "0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f",
+        "symbol": "WBTC",
+        "decimals": 8,
+        "priceUsd": 90758.20820382512
+      },
+      "state": {
+        "supplyAssetsUsd": 5005014.731754182,
+        "borrowAssetsUsd": 3652462.583681602,
+        "collateralAssetsUsd": 5656197.643271441,
+        "liquidityAssetsUsd": 1352552.14807258,
+        "fee": 0,
+        "utilization": 0.729760605999549
+      }
+    },
+    {
+      "uniqueKey": "0xe6392ff19d10454b099d692b58c361ef93e31af34ed1ef78232e07c78fe99169",
+      "lltv": "860000000000000000",
+      "loanAsset": {
+        "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "symbol": "USDC",
+        "decimals": 6,
+        "priceUsd": 1.00019863013612
+      },
+      "collateralAsset": {
+        "address": "0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f",
+        "symbol": "WBTC",
+        "decimals": 8,
+        "priceUsd": 90758.20820382512
+      },
+      "state": {
+        "supplyAssetsUsd": 3731503.736305821,
+        "borrowAssetsUsd": 3307145.8353384505,
+        "collateralAssetsUsd": 5784056.9983333545,
+        "liquidityAssetsUsd": 424357.90096737037,
+        "fee": 0,
+        "utilization": 0.8862769727821622
+      }
+    },
+    {
+      "uniqueKey": "0x71c2954e00c8f72864600c9d1d1cd70fa15202c4294cd938d80add3be2eced26",
+      "lltv": "915000000000000000",
+      "loanAsset": {
+        "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "symbol": "USDC",
+        "decimals": 6,
+        "priceUsd": 1.00019863013612
+      },
+      "collateralAsset": {
+        "address": "0x0B2b2B2076d95dda7817e785989fE353fe955ef9",
+        "symbol": "sUSDai",
+        "decimals": 18,
+        "priceUsd": 1.3275540747383077
+      },
+      "state": {
+        "supplyAssetsUsd": 3000887.5745601174,
+        "borrowAssetsUsd": 2674617.4073894843,
+        "collateralAssetsUsd": 4245685.126529639,
+        "liquidityAssetsUsd": 326270.16717063275,
+        "fee": 0,
+        "utilization": 0.8912754446595825
+      }
+    },
+    {
+      "uniqueKey": "0x9e90aec7d768403dacc9dd0d8320307fda3f980eed4df43e3e52168a1c667709",
+      "lltv": "915000000000000000",
+      "loanAsset": {
+        "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "symbol": "USDC",
+        "decimals": 6,
+        "priceUsd": 1.00019863013612
+      },
+      "collateralAsset": {
+        "address": "0x6eAf19b2FC24552925dB245F9Ff613157a7dbb4C",
+        "symbol": "xUSD",
+        "decimals": 6,
+        "priceUsd": 0.005995382173549687
+      },
+      "state": {
+        "supplyAssetsUsd": 2432123.64799648,
+        "borrowAssetsUsd": 2432123.64799548,
+        "collateralAssetsUsd": 3862.9135392658577,
+        "liquidityAssetsUsd": 0.00000100019863013612,
+        "fee": 0,
+        "utilization": 0.9999999999995888
+      }
+    },
+    {
+      "uniqueKey": "0xc7670063349ac19dfa324ead7bd7da2985ae931e1b09fb0e31b62c6486b730bd",
+      "lltv": "860000000000000000",
+      "loanAsset": {
+        "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "symbol": "USDC",
+        "decimals": 6,
+        "priceUsd": 1.00019863013612
+      },
+      "collateralAsset": {
+        "address": "0x35E5dB674D8e93a03d814FA0ADa70731efe8a4b9",
+        "symbol": "RLP",
+        "decimals": 18,
+        "priceUsd": 1.2754790316468174
+      },
+      "state": {
+        "supplyAssetsUsd": 2394128.21609144,
+        "borrowAssetsUsd": 2164082.5337846535,
+        "collateralAssetsUsd": 2747885.171174709,
+        "liquidityAssetsUsd": 230045.68230678642,
+        "fee": 0,
+        "utilization": 0.9039125470554998
+      }
+    },
+    {
+      "uniqueKey": "0x209fa1520640f664f59f7c1f955d52e8b81ead826edf439b48254d21d24b97a9",
+      "lltv": "860000000000000000",
+      "loanAsset": {
+        "address": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+        "symbol": "USDT0",
+        "decimals": 6,
+        "priceUsd": 0.9985388956560267
+      },
+      "collateralAsset": {
+        "address": "0x5979D7b546E38E414F7E9822514be443A4800529",
+        "symbol": "wstETH",
+        "decimals": 18,
+        "priceUsd": 3825.9260170357747
+      },
+      "state": {
+        "supplyAssetsUsd": 2174072.856888336,
+        "borrowAssetsUsd": 1954392.0581771117,
+        "collateralAssetsUsd": 3616613.041093477,
+        "liquidityAssetsUsd": 219680.79871122405,
+        "fee": 0,
+        "utilization": 0.8989542608863419
+      }
+    },
+    {
+      "uniqueKey": "0x941f407149a7365a76829bdc1e47c88b528efdc06d34e8a4cb363462e51167d8",
+      "lltv": "965000000000000000",
+      "loanAsset": {
+        "address": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+        "symbol": "USDT0",
+        "decimals": 6,
+        "priceUsd": 0.9985388956560267
+      },
+      "collateralAsset": {
+        "address": "0xbeeff1D5dE8F79ff37a151681100B039661da518",
+        "symbol": "bbqUSDC",
+        "decimals": 18,
+        "priceUsd": null
+      },
+      "state": {
+        "supplyAssetsUsd": 1854762.7502152082,
+        "borrowAssetsUsd": 1686191.9902027303,
+        "collateralAssetsUsd": null,
+        "liquidityAssetsUsd": 168570.76001247787,
+        "fee": 0,
+        "utilization": 0.9091146509207614
+      }
+    },
+    {
+      "uniqueKey": "0x14982da64b67967ef3a70c2f3b7d05518f7dd4ba98d850c40c46618c75059a64",
+      "lltv": "770000000000000000",
+      "loanAsset": {
+        "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "symbol": "USDC",
+        "decimals": 6,
+        "priceUsd": 1.00019863013612
+      },
+      "collateralAsset": {
+        "address": "0x528A5bac7E746C9A509A1f4F6dF58A03d44279F9",
+        "symbol": "GLV [WETH-USDC]",
+        "decimals": 18,
+        "priceUsd": 1.4492451015583108
+      },
+      "state": {
+        "supplyAssetsUsd": 724576.8979351366,
+        "borrowAssetsUsd": 647714.1671523933,
+        "collateralAssetsUsd": 1198867.293878323,
+        "liquidityAssetsUsd": 76862.7307827433,
+        "fee": 0,
+        "utilization": 0.8939205334840472
+      }
+    },
+    {
+      "uniqueKey": "0xf4ab212f6fcc943e2669cb6307fa4b608b0418ac5255c100e58394822157785c",
+      "lltv": "915000000000000000",
+      "loanAsset": {
+        "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "symbol": "USDC",
+        "decimals": 6,
+        "priceUsd": 1.00019863013612
+      },
+      "collateralAsset": {
+        "address": "0x8b4Ca42bB3B1d789859f106222CF7DC5EEd48CCb",
+        "symbol": "PT-USDai-20NOV2025",
+        "decimals": 18,
+        "priceUsd": 1.0004399688013466
+      },
+      "state": {
+        "supplyAssetsUsd": 349942.6855353894,
+        "borrowAssetsUsd": 308102.2811846185,
+        "collateralAssetsUsd": 401422.00039058656,
+        "liquidityAssetsUsd": 41840.404350770914,
+        "fee": 0,
+        "utilization": 0.8804364083599637
+      }
+    },
+    {
+      "uniqueKey": "0xadc6897d644a005149d1aa42de72bcb1ff1c9f7c4a8b00db3e2356752995f80e",
+      "lltv": "915000000000000000",
+      "loanAsset": {
+        "address": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+        "symbol": "USDT0",
+        "decimals": 6,
+        "priceUsd": 0.9985388956560267
+      },
+      "collateralAsset": {
+        "address": "0x66CFbD79257dC5217903A36293120282548E2254",
+        "symbol": "wstUSR",
+        "decimals": 18,
+        "priceUsd": 1.1264438762151634
+      },
+      "state": {
+        "supplyAssetsUsd": 267040.2099756598,
+        "borrowAssetsUsd": 129138.94211014788,
+        "collateralAssetsUsd": 159015.01964194502,
+        "liquidityAssetsUsd": 137901.26786551194,
+        "fee": 0,
+        "utilization": 0.48359362105773745
+      }
+    },
+    {
+      "uniqueKey": "0xac6a118134cc4208a22534b041a83f4ac5ca42e2ab9ea732ee53c44b7deebc62",
+      "lltv": "860000000000000000",
+      "loanAsset": {
+        "address": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+        "symbol": "USDT0",
+        "decimals": 6,
+        "priceUsd": 0.9985388956560267
+      },
+      "collateralAsset": {
+        "address": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+        "symbol": "WETH",
+        "decimals": 18,
+        "priceUsd": 3122.8130221265956
+      },
+      "state": {
+        "supplyAssetsUsd": 222607.18129545942,
+        "borrowAssetsUsd": 168835.11053161795,
+        "collateralAssetsUsd": 287983.94718363223,
+        "liquidityAssetsUsd": 53772.07076384148,
+        "fee": 0,
+        "utilization": 0.7584441326155084
+      }
+    },
+    {
+      "uniqueKey": "0x1a926ab8add08dca634f8d6cecd8c866e166a4affc65801beda9f239d21b622a",
+      "lltv": "770000000000000000",
+      "loanAsset": {
+        "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "symbol": "USDC",
+        "decimals": 6,
+        "priceUsd": 1.00019863013612
+      },
+      "collateralAsset": {
+        "address": "0x70d95587d40A2caf56bd97485aB3Eec10Bee6336",
+        "symbol": "GM:ETH/USD[WETH-USDC]",
+        "decimals": 18,
+        "priceUsd": 1.9526286021858708
+      },
+      "state": {
+        "supplyAssetsUsd": 211760.74720990847,
+        "borrowAssetsUsd": 188384.71612176465,
+        "collateralAssetsUsd": 373556.12466141715,
+        "liquidityAssetsUsd": 23376.031088143824,
+        "fee": 0,
+        "utilization": 0.8896111229482381
+      }
+    },
+    {
+      "uniqueKey": "0x7d4799e15dcaad9da49ab8edf46d647db2da2ff419db52e8ec0984d0c49e8b9b",
+      "lltv": "915000000000000000",
+      "loanAsset": {
+        "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "symbol": "USDC",
+        "decimals": 6,
+        "priceUsd": 1.00019863013612
+      },
+      "collateralAsset": {
+        "address": "0x5B2C615E22272234AACF187632a0531cA1243279",
+        "symbol": "PT-USDai-19FEB2026",
+        "decimals": 18,
+        "priceUsd": 0.9935192327479553
+      },
+      "state": {
+        "supplyAssetsUsd": 163885.20784951161,
+        "borrowAssetsUsd": 143881.23553084562,
+        "collateralAssetsUsd": 168633.94024918726,
+        "liquidityAssetsUsd": 20003.97231866599,
+        "fee": 0,
+        "utilization": 0.8779391222602912
+      }
+    },
+    {
+      "uniqueKey": "0xa35d91efb3e284a0ab7098e8c5a65caf58ea0451073e36a544a821fd8f350953",
+      "lltv": "770000000000000000",
+      "loanAsset": {
+        "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "symbol": "USDC",
+        "decimals": 6,
+        "priceUsd": 1.00019863013612
+      },
+      "collateralAsset": {
+        "address": "0xdF03EEd325b82bC1d4Db8b49c30ecc9E05104b96",
+        "symbol": "GLV [WBTC-USDC]",
+        "decimals": 18,
+        "priceUsd": 1.4923123174340098
+      },
+      "state": {
+        "supplyAssetsUsd": 130717.7797640818,
+        "borrowAssetsUsd": 114020.17068837369,
+        "collateralAssetsUsd": 321212.4300183127,
+        "liquidityAssetsUsd": 16697.609075708104,
+        "fee": 0,
+        "utilization": 0.8722621428711245
+      }
+    },
+    {
+      "uniqueKey": "0xe6be8ab6e38852172dc56fe7964b6e9ced1b1641bc5685ba1ef12c3aaaa9d361",
+      "lltv": 0,
+      "loanAsset": {
+        "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "symbol": "USDC",
+        "decimals": 6,
+        "priceUsd": 1.00019863013612
+      },
+      "collateralAsset": null,
+      "state": {
+        "supplyAssetsUsd": 121775.6969636882,
+        "borrowAssetsUsd": 0,
+        "collateralAssetsUsd": null,
+        "liquidityAssetsUsd": 121775.6969636882,
+        "fee": 0,
+        "utilization": 0
+      }
+    }
+  ]
+}

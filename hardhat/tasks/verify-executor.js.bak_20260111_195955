@@ -1,0 +1,86 @@
+import { keccak256, isAddress, getAddress, zeroAddress, hexToBytes } from "viem";
+
+/**
+ * Hardhat Task Action: verify-executor
+ * - Checks chainId == 42161 (Arbitrum One)
+ * - Reads on-chain bytecode and compares against local artifact deployedBytecode
+ * - Attempts to read common getters if present (owner/treasury/etc)
+ */
+export default async function (taskArgs, hre) {
+  const expectedChainId = 42161;
+
+  const addrRaw = (taskArgs.address ?? process.env.EXECUTOR_ADDRESS ?? "").trim();
+  if (!addrRaw) throw new Error("Missing --address or EXECUTOR_ADDRESS");
+  if (!isAddress(addrRaw)) throw new Error(`Invalid address: ${addrRaw}`);
+
+  const address = getAddress(addrRaw);
+
+  const { viem } = await hre.network.connect();
+  const publicClient = await viem.getPublicClient();
+
+  const chainId = await publicClient.getChainId();
+  if (chainId !== expectedChainId) {
+    throw new Error(`Wrong chainId. Expected ${expectedChainId} (Arbitrum One), got ${chainId}`);
+  }
+
+  const onchainCode = await publicClient.getBytecode({ address });
+  if (!onchainCode || onchainCode === "0x") {
+    throw new Error(`No bytecode at ${address}. Not a contract or wrong address/network.`);
+  }
+
+  const artifact = await hre.artifacts.readArtifact("LiquidationExecutor");
+  const localDeployedBytecode =
+    artifact.deployedBytecode ??
+    artifact.deployedBytecode?.object ??
+    artifact.evm?.deployedBytecode?.object ??
+    "";
+
+  if (!localDeployedBytecode || localDeployedBytecode === "0x") {
+    throw new Error("Could not find deployed bytecode in artifact (LiquidationExecutor).");
+  }
+
+  const onchainHash = keccak256(hexToBytes(onchainCode));
+  const localHash = keccak256(hexToBytes(localDeployedBytecode));
+
+  console.log("== On-chain verification ==");
+  console.log(`network.chainId: ${chainId}`);
+  console.log(`contract: ${address}`);
+  console.log(`onchain.bytecode.keccak256: ${onchainHash}`);
+  console.log(`local.deployedBytecode.keccak256: ${localHash}`);
+
+  if (onchainHash !== localHash) {
+    console.log("WARNING: bytecode hash mismatch.");
+    console.log(`onchain.len: ${onchainCode.length} hex chars`);
+    console.log(`local.len:   ${localDeployedBytecode.length} hex chars`);
+    throw new Error("Bytecode mismatch: local artifact does not match on-chain bytecode.");
+  }
+
+  console.log("OK: bytecode matches local artifact.");
+
+  // Try common getters if they exist in ABI
+  const abi = artifact.abi ?? [];
+  const hasFn = (name) =>
+    abi.some((x) => x?.type === "function" && x?.name === name && (x?.inputs?.length ?? 0) === 0);
+
+  const read0 = async (fnName) => {
+    try {
+      const result = await publicClient.readContract({ address, abi, functionName: fnName, args: [] });
+      return result;
+    } catch (e) {
+      return undefined;
+    }
+  };
+
+  const candidates = ["owner", "treasury", "AAVE_POOL", "MORPHO", "SWAP_ROUTER"];
+  console.log("== Getter probe ==");
+  for (const fn of candidates) {
+    if (!hasFn(fn)) continue;
+    const v = await read0(fn);
+    if (typeof v === "string" && v === zeroAddress) {
+      throw new Error(`Guardrail failed: ${fn}() returned zero address`);
+    }
+    console.log(`${fn}():`, v);
+  }
+
+  console.log("Done.");
+}

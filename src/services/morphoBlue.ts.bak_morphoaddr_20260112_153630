@@ -1,0 +1,64 @@
+import { createPublicClient, getAddress, http } from "viem";
+import { arbitrum } from "viem/chains";
+
+// Morpho Blue core contract view ABI (minimal).
+// Struct layouts are from Morpho Blue core contract interface (Morpho.sol).
+export const MORPHO_BLUE_ABI = [
+  {
+    type: "function",
+    name: "market",
+    stateMutability: "view",
+    inputs: [{ name: "id", type: "bytes32" }],
+    outputs: [
+      { name: "totalSupplyAssets", type: "uint128" },
+      { name: "totalSupplyShares", type: "uint128" },
+      { name: "totalBorrowAssets", type: "uint128" },
+      { name: "totalBorrowShares", type: "uint128" },
+      { name: "lastUpdate", type: "uint128" },
+      { name: "fee", type: "uint128" }
+    ]
+  }
+] as const;
+
+export type MarketTotals = {
+  totalSupplyAssets: bigint;
+  totalSupplyShares: bigint;
+  totalBorrowAssets: bigint;
+  totalBorrowShares: bigint;
+  lastUpdate: bigint;
+  fee: bigint;
+};
+
+export function defaultMorphoAddr(): `0x${string}` {
+  // Morpho Blue core (override with MORPHO_ADDR env)
+  return getAddress(process.env.MORPHO_ADDR ?? "0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb");
+}
+
+export function getClient(rpcUrl: string) {
+  return createPublicClient({ chain: arbitrum, transport: http(rpcUrl) });
+}
+
+export async function readMarketTotals(rpcUrl: string, marketId: `0x${string}`, morphoAddr?: `0x${string}`): Promise<MarketTotals> {
+  const client = getClient(rpcUrl);
+  const addr = morphoAddr ? getAddress(morphoAddr) : defaultMorphoAddr();
+
+  const out = await client.readContract({
+    address: addr,
+    abi: MORPHO_BLUE_ABI,
+    functionName: "market",
+    args: [marketId]
+  });
+
+  const [totalSupplyAssets, totalSupplyShares, totalBorrowAssets, totalBorrowShares, lastUpdate, fee] = out as readonly [
+    bigint, bigint, bigint, bigint, bigint, bigint
+  ];
+
+  return { totalSupplyAssets, totalSupplyShares, totalBorrowAssets, totalBorrowShares, lastUpdate, fee };
+}
+
+// assets -> shares rounding UP
+export function assetsToSharesUp(assets: bigint, totalAssets: bigint, totalShares: bigint): bigint {
+  if (assets <= 0n) return 0n;
+  if (totalAssets === 0n || totalShares === 0n) throw new Error("assetsToSharesUp: zero totals");
+  return (assets * totalShares + totalAssets - 1n) / totalAssets;
+}

@@ -1,0 +1,29 @@
+{
+  "generatedAt": "2026-01-11T18:32:20.373Z",
+  "requiredNetUsd": 0.5,
+  "quoteEnabled": true,
+  "quoterOk": true,
+  "estimatedGasUsd": 0.090228048139484,
+  "ethPrice": {
+    "usd": 3119.50446896,
+    "source": "chainlink",
+    "stale": false,
+    "ageSec": 3,
+    "updatedAt": 1768156326,
+    "maxAgeSec": 900
+  },
+  "pricingDegraded": false,
+  "allowExecWithDegradedPricing": false,
+  "diagnostics": {
+    "passesQuoted": 3,
+    "passesExec": 3,
+    "diagExecPass": 1,
+    "bestQuotedNet": 116.40108688216705,
+    "bestQuotedMode": "quoterV2_fee_100",
+    "bestExecNet": 116.40108688216705,
+    "bestExecMode": "quoterV2_fee_100",
+    "skippedUnsupported": 4,
+    "considered": 32,
+    "produced": 28
+  }
+}

@@ -1,0 +1,5 @@
+
+--- EXEC CANDIDATE ---
+0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff | 0x3d7f861e7faBe268C074DE3Ff1dd0b3A2EB3D70e | repay=10000 USDC | coll=thBILL
+SIMULATION: FAIL The contract function "execute" reverted with the following reason:
+position is healthy

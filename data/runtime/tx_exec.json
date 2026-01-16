@@ -1,0 +1,20 @@
+{
+  "generatedAt": "2026-01-11T18:32:30.295Z",
+  "mode": "heartbeat",
+  "selected": {
+    "marketId": "0x551dbcdcceaf9322986e0cddde993d49840522a9532dc441359acd98af8badff",
+    "borrower": "0xf4766c366f15AB0F338ecC9bEF49BBaAc13649a6",
+    "collateral": "thBILL",
+    "loan": "USDC",
+    "proximity": 0.9997562523701659,
+    "netProfitUsd": 116.40108688216705,
+    "requiredNetUsd": 0.5
+  },
+  "from": "0xf603fE14839F7c893B468e37499f01d594a1d3B6",
+  "to": "0x000000000000000000000000000000000000dEaD",
+  "value": "0",
+  "gas": "100000",
+  "gasPrice": "40232000",
+  "txHash": "0x7c47ee5a93a10adafe1124a592b4ca478b8e67bf6383012ba69c72f71f220ac0",
+  "note": "HEARTBEAT_TX_SENT (0 ETH). Should succeed if destination has no code."
+}

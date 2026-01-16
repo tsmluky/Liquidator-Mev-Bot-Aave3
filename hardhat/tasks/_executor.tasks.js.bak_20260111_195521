@@ -1,0 +1,22 @@
+import { task } from "hardhat/config";
+
+export const verifyExecutorTask =
+  task("verify-executor", "Verify deployed executor: chainId + bytecode hash + basic getters")
+    .addOptionalParam("address", "Executor contract address (defaults to EXECUTOR_ADDRESS env)")
+    .setAction(() => import("./verify-executor.js"))
+    .build();
+
+export const smokeExecutorTask =
+  task("smoke-executor", "Smoke-call executor getters and assert non-zero addresses")
+    .addOptionalParam("address", "Executor contract address (defaults to EXECUTOR_ADDRESS env)")
+    .setAction(() => import("./smoke-executor.js"))
+    .build();
+
+export const saveDeploymentTask =
+  task("save-deployment", "Persist deployment JSON (and tries to recover txHash via Etherscan API v2)")
+    .addOptionalParam("address", "Executor contract address (defaults to EXECUTOR_ADDRESS env)")
+    .addOptionalParam("out", "Output path", "deployments/arbitrumOne.json")
+    .setAction(() => import("./save-deployment.js"))
+    .build();
+
+export const executorTasks = [verifyExecutorTask, smokeExecutorTask, saveDeploymentTask];
