@@ -1,14 +1,14 @@
 # Aave V3 Liquidator: Institutional-Grade MEV Engine
 
-> **High-Frequency, Dual-Core Architected Liquidation System for EVM L2s.**
+> **High-Frequency, Tri-Core Architected Liquidation System for EVM L2s.**
 
-![Status](https://img.shields.io/badge/status-production-success.svg) ![Strategy](https://img.shields.io/badge/strategy-atomic%20arbitrage-blueviolet.svg) ![Audited](https://img.shields.io/badge/architecture-dual%20core-00c853.svg)
+![Status](https://img.shields.io/badge/status-production-success.svg) ![Strategy](https://img.shields.io/badge/strategy-atomic%20arbitrage-blueviolet.svg) ![Audited](https://img.shields.io/badge/architecture-tri%20core-00c853.svg)
 
 ##  Executive Summary
 
 This repository hosts the source code for a production-grade **Liquidation Bot** targeting the Aave V3 protocol on Arbitrum and Base. It was engineered to solve the "latency vs. intelligence" trade-off common in DeFi arbitrage.
 
-By implementing a **Parallel Dual-Core Architecture**, the system achieves sub-second detection latency while simultaneously performing complex off-chain risk modelling and atomic execution planning. It represents a state-of-the-art approach to securing decentralized lending markets.
+By implementing a **Parallel Tri-Core Architecture**, the system achieves sub-second detection latency while simultaneously performing complex off-chain risk modelling and atomic execution planning. It represents a state-of-the-art approach to securing decentralized lending markets.
 
 ---
 
@@ -16,13 +16,19 @@ By implementing a **Parallel Dual-Core Architecture**, the system achieves sub-s
 
 The system abandons the traditional sequential loop for a decoupled, event-driven model:
 
-### 1. The Cortex (Scanner)
+### 1. The Miner ⛏️ (Discovery)
 *Dedicated process for high-velocity data ingestion.*
 - **Zero-Latency Polling:** Optimized `eth_getLogs` scraping loop running at the theoretical block-time limit.
 - **Historic Backfill Engine:** Autonomous "time-travel" mining capable of processing 50,000 blocks/cycle to uncover dormant, high-value liquidation targets missed by real-time-only bots.
 - **Append-Only Persistence:** Writes finding to a lock-free JSONL stream (`candidates.jsonl`), ensuring zero blocking on I/O.
 
-### 2. The Strategist (Executor)
+### 2. The Sentry 🛡️ (Watchdog)
+*Dedicated process for high-frequency health monitoring.*
+- **Targeted Surveillance:** Isolates risky positions found by the Miner and monitors them exclusively.
+- **RPC Optimization:** Reduces overhead by focusing only on user accounts that are close to liquidation, rather than scanning the entire pool.
+- **Instant Handoff:** immediate triggers the Sniper upon detecting a Health Factor drop below 1.0.
+
+### 3. The Sniper 🔫 (Execution)
 *Dedicated process for sophisticated financial decision making.*
 - **Off-Chain Risk Engine:** Fully replicates Aave's Health Factor math locally. No RPC calls required to assess solvency, enabling instant reaction to price ticks.
 - **MEV "Smart Bidding":** Implements a probabilistic gas auction strategy ("The Robin Hood Model"). Bidding is purely dynamic—a calculated percentage of the **Expected Net Profit** (e.g., 10%) is allocated to the miner priority fee to guarantee inclusion probability >99% for high-value targets.
