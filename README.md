@@ -50,21 +50,78 @@ The system abandons the traditional sequential loop for a decoupled, event-drive
 
 ---
 
+##  🗂️ Project Structure
+
+```bash
+├── data/               # Runtime database (candidates.jsonl, stats)
+├── hardhat/            # Solidity contracts & deployment scripts
+├── ops/                # PowerShell operational scripts
+├── src/
+│   ├── commands/       # CLI command implementations (plan, scan, etc.)
+│   ├── lib/            # Core logic (Aave math, pathfinding)
+│   └── logger.ts       # Structured logging configuration
+├── test/               # Unit and Integration tests
+└── tx_plan.json        # Output of the Planner module
+```
+
+##  🛠️ Development Setup
+
+Designed for rapid iteration and safety.
+
+### Prerequisites
+- Node.js v18+
+- pnpm (recommended)
+- An RPC URL (Arbitrum/Base)
+
+### Installation
+```bash
+# Install dependencies
+pnpm install
+
+# Setup Environment
+cp .env.example .env
+# Edit .env with your RPC_URL and PRIVATE_KEY
+```
+
+### Testing
+We use standard Node.js test runner with `tsx`.
+```bash
+pnpm test
+```
+
+---
+
 ##  Deployment
 
 Designed for server-grade environments (Linux/Windows) closer to RPC endpoints.
 
-```bash
-# 1. Install dependencies
-pnpm install
+### ⚡ Quick Start (The Master Switch)
 
-# 2. Configure Environment
-# Set ARB_RPC_URL, PRIVATE_KEY, EXECUTOR_ADDR in .env
+Launch the entire Tri-Force fleet (Miner, Sentry, Sniper) in separate windows with a double-click:
 
-# 3. Launch Dual-Core Engine
-# Terminal A:
-./run_scan.ps1
-# Terminal B:
+Double-click **`Start_Aave_Bot.bat`** in the project folder.
+
+*(Or running `./Liquidator_Aave3.ps1` from PowerShell if you prefer)*
+
+### 🤓 Manual Start (The Hard Way)
+
+If you prefer manual control, run the bot in **3 separate terminals**:
+
+**Terminal 1: THE MINER ⛏️ (Discovery)**
+Excavates historical data to find new borrowers without pausing.
+```powershell
+./run_miner.ps1
+```
+
+**Terminal 2: THE SENTRY 🛡️ (Watchdog)**
+Monitors the health of known users at high frequency (No RPC overhead).
+```powershell
+./run_sentry.ps1
+```
+
+**Terminal 3: THE SNIPER 🔫 (Execution)**
+Calculates functionality and executes liquidations on targets found by the Sentry.
+```powershell
 ./run_strategy.ps1
 ```
 

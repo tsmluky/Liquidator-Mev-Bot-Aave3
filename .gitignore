@@ -6,3 +6,5 @@ data/*.json
 data/*.jsonl
 cache/
 artifacts/
+
+_export/

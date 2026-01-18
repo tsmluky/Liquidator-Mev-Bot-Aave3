@@ -19,7 +19,7 @@ async function main() {
   const publicClient = await viem.getPublicClient();
   const chainId = await publicClient.getChainId();
 
-  console.log("Network:", hre.network.name, "ChainID:", chainId);
+  console.log("Network:", (hre.network as any).name, "ChainID:", chainId);
   console.log("Deployer:", deployer.account.address);
 
   // Addresses Configuration

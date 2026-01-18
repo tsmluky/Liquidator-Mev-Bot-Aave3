@@ -17,7 +17,10 @@ program
   .description("🎯 LUKX Reaper | Aave V3 Liquidation Engine")
   .version("v0.LUKX");
 
-program.command("scan").description("Discover candidates").action(async () => scanCmd());
+program.command("scan")
+  .description("Discover candidates")
+  .option("-m, --mode <mode>", "mining | sentry | mixed", "mixed")
+  .action(async (opts) => scanCmd(opts));
 // program.command("simulate").description("Simulate opportunities net profitability").action(async () => simulateCmd());
 program.command("plan").description("Create tx plan (WATCH/EXEC)").action(async () => planCmd());
 // program.command("preflight").description("Preflight checks (RPC, quoter, staleness, key if EXEC)").action(async () => preflightCmd());

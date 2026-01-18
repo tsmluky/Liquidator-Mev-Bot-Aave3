@@ -2,6 +2,7 @@ import fs from "node:fs";
 import { logger } from "../logger";
 import { loadConfig } from "../config";
 import { dataPath } from "../lib/data_dir";
+import { loadBlacklist, isBlacklisted } from "../lib/blacklist";
 import { Address, parseUnits } from "viem";
 
 type PlanAction = "EXEC" | "WATCH" | "SKIP";
@@ -74,9 +75,16 @@ export async function planCmd() {
   const maxTxGasPriceWei = BigInt(process.env.MAX_TX_GAS_PRICE_WEI ?? "0");
   const slippageBps = cfg.SLIPPAGE_BPS;
 
+  const blacklist = loadBlacklist();
+
   for (const c of candidates) {
+    // Check blacklist first
+    if (isBlacklisted(blacklist, c.borrower as string)) continue;
     // Basic filter
     if (c.status === "below_watch") continue;
+
+    // GHOST FILTER (Redundant safety)
+    if (c.totalCollateralUSD < 1 && c.totalDebtUSD < 1) continue;
 
     let action: PlanAction = "WATCH";
     let note = `HF=${c.healthFactor.toFixed(4)}`;
@@ -93,7 +101,7 @@ export async function planCmd() {
       // If assets not already fetched (all zeros), fetch them now
       if (!bestDebt || bestDebt === "0x0000000000000000000000000000000000000000") {
         const { getUserAssets } = await import("../lib/getUserAssets");
-        const assets = await getUserAssets(c.borrower as Address, cfg.AAVE_POOL_ADDRESS_PROVIDER, cfg.AAVE_POOL_ADDRESS_PROVIDER);
+        const assets = await getUserAssets(c.borrower as Address, cfg.AAVE_POOL_ADDRESS_PROVIDER as Address, cfg.AAVE_POOL_ADDRESS_PROVIDER as Address);
         bestDebt = assets.bestDebt;
         bestCollateral = assets.bestCollateral;
         bestDebtAmount = assets.bestDebtAmount;
@@ -134,7 +142,7 @@ export async function planCmd() {
           // Construct UniV3 Path (Mock)
           // Collateral -> 3000 -> Debt
           const fee = 3000;
-          const pathStr = encodeV3Path([c.bestCollateral, c.bestDebt], [fee]);
+          const pathStr = encodeV3Path([bestCollateral as Address, bestDebt as Address], [fee]);
 
           // amountOutMin: 0 for now (unsafe but enables simulation to run).
           // In production, MUST quote.
@@ -144,8 +152,8 @@ export async function planCmd() {
           const nonce = BigInt(Date.now());
 
           order = {
-            debtAsset: c.bestDebt,
-            collateralAsset: c.bestCollateral,
+            debtAsset: bestDebt as Address,
+            collateralAsset: bestCollateral as Address,
             borrower: c.borrower,
             repayAmount,
             uniPath: pathStr,
@@ -199,10 +207,17 @@ export async function planCmd() {
     .slice(0, 5);
 
   if (topRisk.length > 0) {
+    const W = 75;
+    const line = "─".repeat(W - 2);
+    const borderTop = `┌${line}┐`;
+    const borderMid = `├${line}┤`;
+    const borderBot = `└${line}┘`;
+    const pad = (s: string) => s.padEnd(W - 4);
+
     console.log("");
-    console.log("┌────────────────────────────────────────────────────────┐");
-    console.log("│ 📝 STRATEGY PLANNER - TOP RISK TARGETS                  │");
-    console.log("├────────────────────────────────────────────────────────┤");
+    console.log(borderTop);
+    console.log(`│ ${pad("📝 STRATEGY PLANNER - TOP RISK TARGETS")} │`);
+    console.log(borderMid);
 
     const TOKEN_MAP: Record<string, string> = {
       "0xaf88d065e77c8cC2239327C5EDb3A432268e5831": "USDC",
@@ -219,7 +234,6 @@ export async function planCmd() {
 
     for (let i = 0; i < topRisk.length; i++) {
       const c = topRisk[i];
-
       // Allow fetching even if not exec_ready, just for display
       let debtSym = "???";
       let colSym = "???";
@@ -229,25 +243,26 @@ export async function planCmd() {
       // If missing (because scan is fast), fetch now
       if (!bestDebt || bestDebt === "0x0000000000000000000000000000000000000000") {
         try {
-          const assets = await getUserAssets(c.borrower as Address, cfg.AAVE_POOL_ADDRESS_PROVIDER, poolAddr);
+          const assets = await getUserAssets(c.borrower as Address, cfg.AAVE_POOL_ADDRESS_PROVIDER as Address, poolAddr as Address);
           bestDebt = assets.bestDebt;
           bestCollateral = assets.bestCollateral;
         } catch (e) { /* ignore */ }
       }
 
-      debtSym = TOKEN_MAP[bestDebt] || "UNK";
-      colSym = TOKEN_MAP[bestCollateral] || "UNK";
+      debtSym = TOKEN_MAP[bestDebt || ""] || "UNK";
+      colSym = TOKEN_MAP[bestCollateral || ""] || "UNK";
 
       const addr = c.borrower as string;
       const shortAddr = `${addr.slice(0, 10)}...${addr.slice(-8)}`;
-      const collateral = `$${Math.round(c.totalCollateralUSD)}`.padStart(8);
-      const debt = `$${Math.round(c.totalDebtUSD)}`.padStart(8);
+      // Columns: 14 width roughly accounting for $ and millions
+      const collateral = `$${Math.round(c.totalCollateralUSD)}`.padEnd(12);
+      const debt = `$${Math.round(c.totalDebtUSD)}`.padEnd(12);
       const estProfit = Math.round(c.totalDebtUSD * 0.5 * 0.05);
 
-      console.log(`│ ${i + 1}. ${shortAddr}  HF: ${c.healthFactor.toFixed(4)} │`);
-      console.log(`│    Col: ${collateral} (${colSym.padEnd(4)}) | Debt: ${debt} (${debtSym.padEnd(4)}) | Profit: ~$${estProfit} │`);
+      console.log(`│ ${pad(`${i + 1}. ${shortAddr}  HF: ${c.healthFactor.toFixed(4)}`)} │`);
+      console.log(`│ ${pad(`   Col: ${collateral} (${colSym.padEnd(4)}) | Debt: ${debt} (${debtSym.padEnd(4)}) | Prof: ~$${estProfit}`)} │`);
     }
-    console.log("└────────────────────────────────────────────────────────┘");
+    console.log(borderBot);
     console.log("");
   }
 }

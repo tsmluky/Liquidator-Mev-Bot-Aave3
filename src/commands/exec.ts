@@ -6,6 +6,7 @@ import { arbitrum, base } from "viem/chains";
 import { privateKeyToAccount } from "viem/accounts";
 import { dataPath } from "../lib/data_dir";
 import { AaveScanner } from "../services/aaveScanner";
+import { addToBlacklist } from "../lib/blacklist";
 
 function truthyEnv(name: string, def = "0"): boolean {
   return ["1", "true", "yes", "y", "on"].includes(String(process.env[name] ?? def).toLowerCase());
@@ -129,7 +130,7 @@ export async function execCmd() {
   let skippedHealthy = 0;
   let failed = 0;
 
-  const maxAgeSec = 30; // 30s max staleness
+  const maxAgeSec = 90; // Increased to 90s to prevent stale plans on slow loops
   const planAge = (Date.now() - Date.parse(plan.generatedAt ?? "")) / 1000;
   if (planAge > maxAgeSec) {
     logger.error({ planAge, maxAgeSec }, "exec: plan is STALE (safety abort)");
@@ -260,6 +261,8 @@ export async function execCmd() {
         }
         // --- FORENSIC END ---
 
+        // Blacklist purely healthy/dust skips too
+        addToBlacklist(selected.borrower);
         continue;
       }
       failed++;
@@ -267,6 +270,7 @@ export async function execCmd() {
         { candidateId: selected.candidateId, err: c.msg.slice(0, 500) },
         "exec: simulate failed - trying next"
       );
+      addToBlacklist(selected.borrower);
       continue;
     }
   }
