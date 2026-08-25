@@ -1,144 +1,112 @@
-# Aave V3 Liquidator: Institutional-Grade MEV Engine
+# Liquidador de Aave V3
 
-> **High-Frequency, Tri-Core Architected Liquidation System for EVM L2s.**
+> Bot que detecta posiciones de préstamo por debajo del umbral de liquidación en Aave V3 y
+> las liquida en una sola transacción atómica. Arbitrum y Base.
 
-![Status](https://img.shields.io/badge/status-production-success.svg) ![Strategy](https://img.shields.io/badge/strategy-atomic%20arbitrage-blueviolet.svg) ![Audited](https://img.shields.io/badge/architecture-tri%20core-00c853.svg)
+## Por qué existe
 
-##  Executive Summary
+En un protocolo de préstamo como Aave, cuando la garantía de alguien cae por debajo del
+umbral, cualquiera puede liquidar su posición: repagas parte de su deuda y te llevas la
+garantía con descuento. El protocolo lo necesita para no acumular deuda incobrable.
 
-This repository hosts the source code for a production-grade **Liquidation Bot** targeting the Aave V3 protocol on Arbitrum and Base. It was engineered to solve the "latency vs. intelligence" trade-off common in DeFi arbitrage.
+El problema es que hay dos cosas que compiten entre sí. Puedes reaccionar **rápido**, y
+entonces no te da tiempo a calcular bien si la operación sale a cuenta. O puedes calcular
+**bien**, y entonces llegas tarde.
 
-By implementing a **Parallel Tri-Core Architecture**, the system achieves sub-second detection latency while simultaneously performing complex off-chain risk modelling and atomic execution planning. It represents a state-of-the-art approach to securing decentralized lending markets.
+Este bot separa las dos cosas en tres procesos que corren a la vez y no se bloquean entre
+ellos.
 
----
+## Los tres procesos
 
-##  Core Architecture
+**Explorador.** Descubre prestatarios. Recorre los logs de la cadena al ritmo del bloque y,
+en paralelo, hace un barrido histórico de hasta 50.000 bloques por ciclo para encontrar
+posiciones antiguas que un bot que solo mira el presente nunca ve. Escribe lo que encuentra
+en un `candidates.jsonl` append-only, así que nunca se bloquea escribiendo.
 
-The system abandons the traditional sequential loop for a decoupled, event-driven model:
+**Vigía.** No mira toda la cadena: solo las posiciones que el Explorador marcó como
+arriesgadas. Al reducir el conjunto, puede consultarlas con mucha más frecuencia sin
+disparar el consumo de RPC. Cuando un health factor baja de 1, avisa al Ejecutor.
 
-### 1. The Miner ⛏️ (Discovery)
-*Dedicated process for high-velocity data ingestion.*
-- **Zero-Latency Polling:** Optimized `eth_getLogs` scraping loop running at the theoretical block-time limit.
-- **Historic Backfill Engine:** Autonomous "time-travel" mining capable of processing 50,000 blocks/cycle to uncover dormant, high-value liquidation targets missed by real-time-only bots.
-- **Append-Only Persistence:** Writes finding to a lock-free JSONL stream (`candidates.jsonl`), ensuring zero blocking on I/O.
+**Ejecutor.** Decide y ejecuta. Replica en local la aritmética del health factor de Aave, así
+que puede valorar una posición sin una sola llamada RPC y reaccionar en el momento en que
+cambia un precio. Si sale a cuenta, lanza la transacción.
 
-### 2. The Sentry 🛡️ (Watchdog)
-*Dedicated process for high-frequency health monitoring.*
-- **Targeted Surveillance:** Isolates risky positions found by the Miner and monitors them exclusively.
-- **RPC Optimization:** Reduces overhead by focusing only on user accounts that are close to liquidation, rather than scanning the entire pool.
-- **Instant Handoff:** immediate triggers the Sniper upon detecting a Health Factor drop below 1.0.
+## La liquidación, paso a paso
 
-### 3. The Sniper 🔫 (Execution)
-*Dedicated process for sophisticated financial decision making.*
-- **Off-Chain Risk Engine:** Fully replicates Aave's Health Factor math locally. No RPC calls required to assess solvency, enabling instant reaction to price ticks.
-- **MEV "Smart Bidding":** Implements a probabilistic gas auction strategy ("The Robin Hood Model"). Bidding is purely dynamic—a calculated percentage of the **Expected Net Profit** (e.g., 10%) is allocated to the miner priority fee to guarantee inclusion probability >99% for high-value targets.
-- **Flashloan-Powered:** Atomic execution via custom Solidity contracts. Debt is repaid using Aave's own liquidity pool via `flashLoanSimple`, requiring **0 operating capital** for the principal.
+Todo ocurre dentro de una sola transacción, en un contrato en Solidity. Si algo falla a
+medio camino, revierte entero y no se pierde nada más que el gas:
 
----
+1. Pide un préstamo relámpago a Aave con `flashLoanSimple`.
+2. Liquida la posición y recibe la garantía con descuento.
+3. Cambia esa garantía por el activo de la deuda.
+4. Devuelve el préstamo relámpago.
+5. Lo que sobra se queda en la tesorería.
 
-##  Features & Capabilities
+Como el principal sale del propio préstamo relámpago, **no hace falta capital propio** para
+la operación: solo para pagar el gas.
 
-- **Atomic Composability:** A single transaction performs -> Flashloan -> Liquidate -> Swap Collateral -> Repay Loan -> Profit to Treasury.
-- **Capital Efficiency:** Infinite leverage capacity dependent only on on-chain liquidity depth, not wallet balance.
-- **Resilience:** Self-healing watchdog processes (PowerShell) ensure 99.9% uptime availability.
-- **Visual Intelligence:** "The Reaper HUD" provides real-time CLI telemetry of target health, asset composition (e.g., WBTC/USDC), and net profit estimation in USD.
+La comisión de prioridad no es fija. Se calcula como un porcentaje del beneficio neto
+estimado de esa liquidación concreta, de modo que en un objetivo grande puede pujar fuerte y
+en uno pequeño no se come el margen.
 
----
+## Estado
 
-##  Technology Stack
+Contrato desplegado en **Arbitrum One** (`hardhat/deployments/arbitrumOne.json`). El
+repositorio incluye los datos de ejecución reales en `data/runtime/`. Es un proyecto
+personal, no un servicio: **nadie lo ha auditado** y no está mantenido.
 
-| Layer | Technology | Rationale |
-|-------|------------|-----------|
-| **Runtime** | Node.js / TypeScript | Strong typing for financial safety + non-blocking I/O. |
-| **Blockchain** | Viem | Bare-metal performance, significantly faster than Ethers.js. |
-| **Smart Contracts** | Solidity 0.8.x | Gas-optimized execution logic. |
-| **Orchestration** | PowerShell Core | Robust process management and IPC. |
+## Puesta en marcha
 
----
-
-##  🗂️ Project Structure
+Requiere Node.js 18 o superior, pnpm y una URL de RPC de Arbitrum o Base.
 
 ```bash
-├── data/               # Runtime database (candidates.jsonl, stats)
-├── hardhat/            # Solidity contracts & deployment scripts
-├── ops/                # PowerShell operational scripts
-├── src/
-│   ├── commands/       # CLI command implementations (plan, scan, etc.)
-│   ├── lib/            # Core logic (Aave math, pathfinding)
-│   └── logger.ts       # Structured logging configuration
-├── test/               # Unit and Integration tests
-└── tx_plan.json        # Output of the Planner module
-```
-
-##  🛠️ Development Setup
-
-Designed for rapid iteration and safety.
-
-### Prerequisites
-- Node.js v18+
-- pnpm (recommended)
-- An RPC URL (Arbitrum/Base)
-
-### Installation
-```bash
-# Install dependencies
 pnpm install
-
-# Setup Environment
 cp .env.example .env
-# Edit .env with your RPC_URL and PRIVATE_KEY
 ```
 
-### Testing
-We use standard Node.js test runner with `tsx`.
+Rellena `RPC_URL` y `PRIVATE_KEY` en el `.env`. La clave privada nunca se versiona.
+
 ```bash
 pnpm test
 ```
 
----
+Los tres procesos van en tres terminales: `./run_miner.ps1` para el Explorador,
+`./run_sentry.ps1` para el Vigía y `./run_strategy.ps1` para el Ejecutor.
+`Start_Aave_Bot.bat` los levanta los tres de golpe.
 
-##  Deployment
+La CLI también se puede usar suelta, que es lo cómodo para probar sin arrancar la flota:
 
-Designed for server-grade environments (Linux/Windows) closer to RPC endpoints.
-
-### ⚡ Quick Start (The Master Switch)
-
-Launch the entire Tri-Force fleet (Miner, Sentry, Sniper) in separate windows with a double-click:
-
-Double-click **`Start_Aave_Bot.bat`** in the project folder.
-
-*(Or running `./Liquidator_Aave3.ps1` from PowerShell if you prefer)*
-
-### 🤓 Manual Start (The Hard Way)
-
-If you prefer manual control, run the bot in **3 separate terminals**:
-
-**Terminal 1: THE MINER ⛏️ (Discovery)**
-Excavates historical data to find new borrowers without pausing.
-```powershell
-./run_miner.ps1
+```bash
+pnpm preflight     # comprueba configuración y conexión
+pnpm scan          # busca posiciones liquidables
+pnpm plan          # construye el plan de transacción
+pnpm simulate      # lo simula sin firmar nada
+pnpm execute       # lo ejecuta de verdad
 ```
 
-**Terminal 2: THE SENTRY 🛡️ (Watchdog)**
-Monitors the health of known users at high frequency (No RPC overhead).
-```powershell
-./run_sentry.ps1
+## Estructura
+
+```
+data/         Estado en ejecución: candidatos, estadísticas, planes de transacción
+hardhat/      Contratos en Solidity, despliegue y tareas
+ops/          Scripts de operación en PowerShell
+src/
+  commands/   Comandos de la CLI (scan, plan, simulate, exec, preflight)
+  lib/        Aritmética de Aave y búsqueda de rutas
+  services/   Acceso a datos de la cadena
+test/         Pruebas con el runner nativo de Node y tsx
 ```
 
-**Terminal 3: THE SNIPER 🔫 (Execution)**
-Calculates functionality and executes liquidations on targets found by the Sentry.
-```powershell
-./run_strategy.ps1
-```
+## Stack
 
----
+TypeScript sobre Node.js. **Viem** para hablar con la cadena, que es bastante más rápido que
+ethers.js. Solidity 0.8.x para el contrato de ejecución, con Hardhat para desplegarlo y
+probarlo. PowerShell para orquestar los procesos.
 
-## Disclaimer & License
+## Aviso
 
-This codebase is open-sourced to demonstrate advanced DeFi development capabilities. It utilizes aggressive strategies typical of MEV (Maximal Extractable Value) searchers.
+Código abierto con fines demostrativos. Opera con dinero real sobre contratos reales y
+emplea estrategias de MEV. Sin auditar y sin garantías: si lo ejecutas, es bajo tu
+responsabilidad.
 
-**Architected by Lukx**
-
-[Twitter](https://x.com/0xLuky) | [GitHub](https://github.com/tsmluky)
-
-*Building the financial infrastructure of tomorrow.*
+Escrito por Francisco Iannicelli · [github.com/tsmluky](https://github.com/tsmluky)
